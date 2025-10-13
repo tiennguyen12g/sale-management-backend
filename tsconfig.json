@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "target": "ES2020",
+    "module": "nodenext",          // ✅ instead of CommonJS
+    "moduleResolution": "nodenext", // ✅ required for ESM
+
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    "strict": true,
+    "esModuleInterop": true,      // ✅ helps with default imports
+    "skipLibCheck": true
+
+  }
+}
