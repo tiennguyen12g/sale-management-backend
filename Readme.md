@@ -1,28 +1,7 @@
-## Create Nodejs Typescript
+### Close the port
+1. netstat -ano | findstr :3000
+2. Get output
+TCP    0.0.0.0:3000    0.0.0.0:0    LISTENING    12345
 
-mkdir express-ts-app && cd express-ts-app
-npm init -y
-
-# Express
-npm install express
-
-# TypeScript + Node/Express types
-npm install -D typescript ts-node @types/node @types/express nodemon
-
-npx tsc --init
-
-# Install mongo DB
-npm install mongoose
-npm install -D @types/mongoose
-
-# npm install dotenv
-
-npm install dotenv
-
-## Install complier for TS file
-npm install -D tsx
-
-## Accept CORS
-npm install cors
-npm install -D @types/cors
-
+3. Close 
+taskkill /PID 12345 /F

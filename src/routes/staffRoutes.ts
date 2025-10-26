@@ -38,6 +38,20 @@ router.get("/", authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
+// Get your staff profile
+router.get("/:staffID/:userId", authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const staffRole = req.user?.staffRole;
+    const {staffID, userId }= req.params;
+
+    if(!staffID || !userId) return  res.status(500).json({ message: `Failed to fetch staff id: ${staffID}` });
+    const staff = await Staff.findOne({staffID, userId});
+    res.json(staff);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch staff", error: String(err) });
+  }
+});
+
 router.put("/:staffID", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const updated = await Staff.findOneAndUpdate(

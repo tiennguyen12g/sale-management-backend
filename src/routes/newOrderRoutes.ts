@@ -57,6 +57,7 @@ router.post("/new-order", async (req, res) => {
       deliveryCode: req.body.deliveryCode,
       facebookLink: req.body.facebookLink,
       tiktokLink: req.body.tiktokLink,
+      promotions: req.body.promotions,
     };
     const order = {
       productId: req.body.productId,
