@@ -47,3 +47,5 @@ pnpm-lock.yaml
 
 # Optional: exclude generated documentation
 docs/
+
+uploads/
