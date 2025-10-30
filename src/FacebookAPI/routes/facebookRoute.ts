@@ -15,7 +15,7 @@ import { AuthRequest, authMiddleware } from "../../middleware/authMiddleware.js"
 import { ISocialData } from "../../models/User.js";
 import { uploadImageToFacebook } from "../services/uploadImage.js";
 import { TempoarayStoreLocalMsg } from "../models/TemporaryStoreLocalMsgId.js";
-
+import type { MediaLinkedType } from "../../models/ShopMedia.js";
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -541,20 +541,105 @@ router.post("/facebook/send-media", authMiddleware, upload.single("file"), async
 });
 
 router.put("/facebook/conversations/edit/:conversationId", authMiddleware, async (req: AuthRequest, res) => {
-  console.log('here');
-try {
-  const {conversationId} = req.params;
-  const {tags} = req.body;
-  if(!conversationId) return res.status(401).json({ message: "Cannot find the conversationId" });
+  console.log("here");
+  try {
+    const { conversationId } = req.params;
+    const { tags } = req.body;
+    if (!conversationId) return res.status(401).json({ message: "Cannot find the conversationId" });
 
-  console.log('runn here', tags);
-  // const conversation = await Conversation.findOne({conversationId});
-  // if(!conversation) return res.status(401).json({ message: "The conversationId does not have data" });
-  await Conversation.findOneAndUpdate({_id: conversationId}, {tags: tags})
-return res.status(200).json({ message: "Update tag to conversation success" });
-} catch (err) {
-      console.error(err);
+    console.log("runn here", tags);
+    // const conversation = await Conversation.findOne({conversationId});
+    // if(!conversation) return res.status(401).json({ message: "The conversationId does not have data" });
+    await Conversation.findOneAndUpdate({ _id: conversationId }, { tags: tags });
+    return res.status(200).json({ message: "Update tag to conversation success" });
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({ message: "Server error", error: String(err) });
-}
-})
+  }
+});
+
+// router.post("/facebook/send-media-group", upload.array("files"))
+router.post("/facebook/send-media-group", authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const { pageId, recipientId, messageObj } = req.body;
+    const localMessage_Id = messageObj._id; //for text
+    const localMessage_Id_ForMedia = messageObj.localIdForMedia; // for group media if it existed 
+    const groupMessageImages: MediaLinkedType[] = messageObj.fastMegAttachedMedia;
+    const textMessage: string = messageObj.message;
+    const pageInfo = await PageInfo.findOne({ pageId, platform: "facebook" });
+    if (!pageInfo) return res.status(404).json({ message: "Page not found" });
+
+    const v = process.env.FB_API_VERSION || "v24.0";
+    const token = pageInfo.pageAccessToken;
+
+    const attachmentIds: string[] = [];
+    if (groupMessageImages.length > 0) {
+      // Step 1 — upload each file
+      for (const attachMedia of groupMessageImages) {
+        const newUrl = attachMedia.url.replace(`${process.env.LOCAL_SERVER_URL}`, `${process.env.SERVER_PUBLIC_URL}`);
+
+        const upload = await axios.post(
+          `https://graph.facebook.com/${v}/me/message_attachments`,
+          {
+            message: {
+              attachment: {
+                type: "image",
+                payload: { url: newUrl, is_reusable: true },
+              },
+            },
+          },
+          { params: { access_token: token } }
+        );
+        console.log("upload.data", upload.data);
+        attachmentIds.push(upload.data.attachment_id);
+      }
+
+      // Step 2 — send all together
+      const attachments = attachmentIds.map((id) => ({
+        type: "image",
+        payload: { attachment_id: id },
+      }));
+
+      // First send group image
+      const sendMediaResp = await axios.post(
+        `https://graph.facebook.com/${v}/me/messages`,
+        {
+          recipient: { id: recipientId },
+          message: { attachments },
+        },
+        { params: { access_token: token } }
+      );
+
+      // ✅ Map local ↔ FB message IDs
+      await TempoarayStoreLocalMsg.create({
+        localMsg_Id: localMessage_Id_ForMedia,
+        facebookMsg_Id: sendMediaResp.data.message_id,
+      });
+
+      if (textMessage.length > 0) {
+        console.log('text run');
+        // second send message
+        const sendMessageResp = await axios.post(
+          `https://graph.facebook.com/${v}/me/messages`,
+          {
+            recipient: { id: recipientId },
+            message: { text: textMessage },
+          },
+          { params: { access_token: token } }
+        );
+
+        await TempoarayStoreLocalMsg.create({
+          localMsg_Id: localMessage_Id,
+          facebookMsg_Id: sendMessageResp.data.message_id,
+        });
+      }
+    }
+
+    res.json({ success: true, attachmentIds });
+  } catch (error) {
+    console.log("err", error);
+    return res.status(500).json({ message: "Server error", error: String(error) });
+  }
+});
+
 export default router;

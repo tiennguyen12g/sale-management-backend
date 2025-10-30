@@ -133,40 +133,6 @@ router.post("/add", authMiddleware, async (req: AuthRequest, res) => {
 });
 
 // Bulk update deliveryStatus
-// router.put("/bulk-update", authMiddleware, async (req: AuthRequest, res) => {
-//   try {
-//     const { ids, deliveryStatus, localFormatted } = req.body; // ids: string[]
-
-//     if (!ids || !Array.isArray(ids) || ids.length === 0) {
-//       return res.status(400).json({ message: "No order IDs provided" });
-//     }
-//     if (!deliveryStatus) {
-//       return res.status(400).json({ message: "No delivery status provided" });
-//     }
-//     let result = null;
-//     if (deliveryStatus === "Đã gửi hàng") {
-//       result = await ShopOrder.updateMany(
-//         { _id: { $in: ids } },
-//         {
-//           $set: {
-//             "final.deliveryStatus": deliveryStatus,
-//             "deliveryDetails.shippedTime": localFormatted,
-//           },
-//         }
-//       );
-//     } else {
-//       result = await ShopOrder.updateMany({ _id: { $in: ids } }, { $set: { "final.deliveryStatus": deliveryStatus } });
-//     }
-
-//     // Only update final.deliveryStatus
-
-//     res.json({ message: "Orders updated successfully", result });
-//   } catch (err) {
-//     // console.error("bulk-update error:", err);
-//     res.status(500).json({ message: "Failed to update orders", error: String(err) });
-//   }
-// });
-
 router.put("/bulk-update", authMiddleware, async (req: AuthRequest, res) => {
   try {
     const { ids, deliveryStatus, localFormatted } = req.body; // ids: string[]
@@ -242,57 +208,6 @@ router.put("/bulk-update", authMiddleware, async (req: AuthRequest, res) => {
 });
 
 // ✅ Update order
-// router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
-//   try {
-//     // console.log('1', Date());
-//     const { staffRole } = req.user!;
-//     const filter = staffRole === "admin" ? { _id: req.params.id } : { _id: req.params.id, userId: req.userId };
-
-//     const updated = await ShopOrder.findOneAndUpdate(filter, req.body, { new: true });
-//     console.log("updated", updated?.final.orderInfo);
-//     if (!updated) return res.status(404).json({ message: "Order not found" });
-//     const orderConfirmed = req.body.final.status;
-//     const productId = req.body.productId;
-//     const orderInfo: IOrderItem[] = req.body.final.orderInfo;
-//     const deliveryStatus = req.body.final?.deliveryDetails?.deliveryStatus || "";
-
-//     if (orderConfirmed === "Chốt" && !updated.stockAdjusted) {
-//       const product = await Product.findOne({ productId });
-//       if (!product) {
-//         console.log("Product ID does not exist");
-//         return res.json(updated); // ✅ Do not continue stock logic
-//       }
-
-//       const newProductDetailed = [...product.productDetailed];
-
-//       for (const order of orderInfo) {
-//         const { color, size, quantity } = order;
-
-//         const indexDetail = newProductDetailed.findIndex((item) => item.color === color && item.size === size);
-
-//         if (indexDetail !== -1) {
-//           const currentStock = newProductDetailed[indexDetail].stock;
-//           const newStock = currentStock - quantity;
-//           newProductDetailed[indexDetail].stock = newStock >= 0 ? newStock : 0;
-//         }
-//       }
-
-//       await Product.findOneAndUpdate({ productId }, { productDetailed: newProductDetailed });
-
-//       if (deliveryStatus === "Đã gửi hàng") {
-//         const shippedTime = updated.deliveryDetails.shippedTime;
-//         if (shippedTime) return;
-//         // If not write, write the date
-//         const localFormatted = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16).replace("T", " ");
-//         await ShopOrder.findOneAndUpdate(filter, { "deliveryDetails.shippedTime": localFormatted }, { new: true });
-//       }
-//     }
-
-//     res.json(updated);
-//   } catch (err) {
-//     res.status(400).json({ message: "Failed to update order", error: String(err) });
-//   }
-// });
 
 router.put("/:id", authMiddleware, async (req: AuthRequest, res) => {
   try {

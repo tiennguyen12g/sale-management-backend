@@ -32,8 +32,8 @@ import updateOrderDataRoutes from "./routes/updateOrderDataRoutes.js";
 import heartBeatRoute from "./routes/heartbeat.js";
 import newOrderRoute from "./routes/newOrderRoutes.js";
 import importExportInventoryRoute from "./routes/importExportInventoryRoutes.js";
-
-
+import settingRoutes from "./routes/settingsRoutes.js";
+import shopMediaRoute from "./routes/shopMediaRoutes.js";
 // Facebook API
 import webhookRoutes from "./FacebookAPI/routes/webhook.js"
 import conversationRoutes from "./FacebookAPI/routes/conversation.js"
@@ -119,9 +119,7 @@ io.on("connection", async (socket) => {
 // });
 // ✅ make uploads folder public
 // ✅ static first
-
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads",)));
-
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.get("/ping", (req, res) => {
   console.log('/ping received');
   res.json({ success: true, message: "Server is reachable 🎯" });
@@ -157,7 +155,8 @@ app.use("/api-v1/shop-orders", shopOrderRoutes);
 // Update order data
 app.use("/api-v1/update-order", updateOrderDataRoutes)
 
-
+// Settings
+app.use("/api-v1/settings", settingRoutes)
 
 // heartbeat
 app.use("/api-v1", heartBeatRoute);
@@ -168,7 +167,8 @@ app.use("/api-v1", newOrderRoute)
 // import export
 app.use("/api-v1/imp-exp-ivt", importExportInventoryRoute)
 
-
+// shop media
+app.use("/api-v1", shopMediaRoute)
 
 // -- Facebook API
 

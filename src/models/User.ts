@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { IPageInfo } from "../FacebookAPI/models/PageInfo.js";
-
+import { exapmleTagList } from "./Settings.js";
 export interface ISocialData {
   id: string;
   name: string;
@@ -20,13 +20,7 @@ interface TagType {
   color: string;
   description?: string;
 }
-export const exapmleTagList: TagType[] = [
-  { id: uuidv4(), tagName: "Chốt-Đang đóng hàng", color: "#00b11dff" },
-  { id: uuidv4(), tagName: "Đã gửi hàng", color: "#d10374ff" },
-  { id: uuidv4(), tagName: "Khách hủy", color: "#e40000ff" },
-  { id: uuidv4(), tagName: "Không trả lời", color: "#b8b8b8ff" },
-  { id: uuidv4(), tagName: "Đã nhận hàng", color: "#04aa2dff" },
-];
+
 // export const exapmleTagList = ["Chốt-Đang đóng hàng", "Đã gửi hàng", "Khách hủy", "Không trả lời", "Đã nhận hàng"]
 export type AdministratorTypes = "tnbt12g" | "normal" | "manager" | "staff" | string;
 export interface IUser extends Document {
@@ -45,10 +39,10 @@ export interface IUser extends Document {
     tiktok?: ISocialData;
     shopee?: ISocialData;
   };
-  settings: {
-    shopTagList: TagType[];
-    [k: string]: any;
-  };
+  // settings: {
+  //   shopTagList: TagType[];
+  //   [k: string]: any;
+  // };
 }
 
 const UserSchema: Schema<IUser> = new Schema(
@@ -67,9 +61,9 @@ const UserSchema: Schema<IUser> = new Schema(
       shopee: { type: Schema.Types.Mixed },
     },
     administrator: { type: String, required: true, default: "normal" },
-    settings: {
-      shopTagList: { type: [{ id: String, tagName: String, color: String }], default: [...exapmleTagList] },
-    },
+    // settings: {
+    //   shopTagList: { type: [{ id: String, tagName: String, color: String }], default: [...exapmleTagList] },
+    // },
   },
   { timestamps: true }
 );

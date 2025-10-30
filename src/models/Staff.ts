@@ -82,6 +82,9 @@ export interface IStaff extends Document {
   bankInfos: {
     bankAccountNumber: string;
     bankOwnerName: string;
+    bankName: string;
+    bankShortName: string;
+    bankCode: string;
   };
 
   salaryHistory: SalaryRecord[];
@@ -141,10 +144,10 @@ const SalaryRecordSchema = new Schema<SalaryRecord>(
 );
 const StaffInfoSchema = new Schema<StaffInfoType>(
   {
-    name: { type: String, required: true },
-    birthday: { type: String, required: true },
-    address: { type: String, required: true },
-    phone: { type: String, required: true },
+    name: { type: String, },
+    birthday: { type: String, },
+    address: { type: String, },
+    phone: { type: String,},
     relationshipStatus: {
       type: String,
       enum: ["single", "married", "divorced", "widowed", "complicated"],
@@ -156,7 +159,7 @@ const StaffInfoSchema = new Schema<StaffInfoType>(
       required: true,
     },
     description: { type: String },
-    identityId: { type: String, required: true },
+    identityId: { type: String, },
     accountLogin: { type: String },
   },
   { _id: false }
@@ -183,8 +186,11 @@ const StaffSchema = new Schema<IStaff>(
     diligenceCount: { type: Number, default: 0 },
 
     bankInfos: {
-      bankAccountNumber: { type: String, required: true },
-      bankOwnerName: { type: String, required: true },
+  bankAccountNumber: { type: String, default: "" },
+  bankOwnerName: { type: String, default: "" },
+  bankName: { type: String, default: "" },
+  bankShortName: { type: String, default: "" },
+  bankCode: { type: String, default: "" },
     },
 
     salaryHistory: { type: [SalaryRecordSchema], default: [] },
