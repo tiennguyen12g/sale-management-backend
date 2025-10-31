@@ -38,7 +38,7 @@ import shopMediaRoute from "./routes/shopMediaRoutes.js";
 import webhookRoutes from "./FacebookAPI/routes/webhook.js"
 import conversationRoutes from "./FacebookAPI/routes/conversation.js"
 import facebookRoutes from "./FacebookAPI/routes/facebookRoute.js"
-import { PageInfo } from "./FacebookAPI/models/PageInfo.js";
+import { PageInfo } from "./models/PageInfo.js";
 
 //Cron task
 import { startTokenRefreshCron } from "./FacebookAPI/services/cronRefreshTokens.js";

@@ -7,7 +7,7 @@ import path from "path";
 import FormData from "form-data";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
-import { PageInfo } from "../models/PageInfo.js";
+import { PageInfo } from "../../models/PageInfo.js";
 import { Conversation } from "../models/Conversation.js";
 import { Message, type IMessage } from "../models/Message.js";
 import User from "../../models/User.js";

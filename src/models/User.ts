@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import { IPageInfo } from "../FacebookAPI/models/PageInfo.js";
+import { IPageInfo } from "./PageInfo.js";
 import { exapmleTagList } from "./Settings.js";
 export interface ISocialData {
   id: string;

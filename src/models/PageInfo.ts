@@ -1,9 +1,9 @@
 // models/PageInfo.ts
-import { Schema, model, Document } from "mongoose";
+import mongoose,  { Schema, model, Document } from "mongoose";
 
 export interface IPageInfo extends Document {
-  userId: string; // owner
-  pageId: string;
+  userId: mongoose.Types.ObjectId; // 🔑 link to User
+  pageId: string; // pageId is the real fanpage id for Facebook and is shopId for Tiktok Shopee
   pageName: string;
   pageAccessToken: string;
   platform: "facebook" | "instagram" | "zalo" | "tiktok" | "shopee" | string;
@@ -15,7 +15,7 @@ export interface IPageInfo extends Document {
 
 const PageInfoSchema = new Schema<IPageInfo>(
   {
-    userId: { type: String, required: true },
+userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // 🔑 NEW FIELD
     pageId: { type: String, required: true, index: true },
     pageName: { type: String, required: true },
     pageAccessToken: { type: String, required: true },

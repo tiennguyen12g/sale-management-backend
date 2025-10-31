@@ -144,10 +144,10 @@ const SalaryRecordSchema = new Schema<SalaryRecord>(
 );
 const StaffInfoSchema = new Schema<StaffInfoType>(
   {
-    name: { type: String, },
-    birthday: { type: String, },
-    address: { type: String, },
-    phone: { type: String,},
+    name: { type: String },
+    birthday: { type: String },
+    address: { type: String },
+    phone: { type: String },
     relationshipStatus: {
       type: String,
       enum: ["single", "married", "divorced", "widowed", "complicated"],
@@ -159,7 +159,7 @@ const StaffInfoSchema = new Schema<StaffInfoType>(
       required: true,
     },
     description: { type: String },
-    identityId: { type: String, },
+    identityId: { type: String },
     accountLogin: { type: String },
   },
   { _id: false }
@@ -186,11 +186,11 @@ const StaffSchema = new Schema<IStaff>(
     diligenceCount: { type: Number, default: 0 },
 
     bankInfos: {
-  bankAccountNumber: { type: String, default: "" },
-  bankOwnerName: { type: String, default: "" },
-  bankName: { type: String, default: "" },
-  bankShortName: { type: String, default: "" },
-  bankCode: { type: String, default: "" },
+      bankAccountNumber: { type: String, default: "" },
+      bankOwnerName: { type: String, default: "" },
+      bankName: { type: String, default: "" },
+      bankShortName: { type: String, default: "" },
+      bankCode: { type: String, default: "" },
     },
 
     salaryHistory: { type: [SalaryRecordSchema], default: [] },

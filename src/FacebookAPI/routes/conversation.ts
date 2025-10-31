@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { Conversation } from "../models/Conversation.js";
 import { Message } from "../models/Message.js";
-import { PageInfo } from "../models/PageInfo.js";
+import { PageInfo } from "../../models/PageInfo.js";
 import { fetchFacebookProfile, sendFacebookMessage } from "../services/facebookServices.js";
 import { AuthRequest, authMiddleware } from "../../middleware/authMiddleware.js";
 import mongoose from "mongoose";

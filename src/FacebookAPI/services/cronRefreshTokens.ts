@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { PageInfo } from "../models/PageInfo.js";
+import { PageInfo } from "../../models/PageInfo.js";
 import { refreshFacebookToken } from "./facebookToken.js";
 
 /**

@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { Conversation, type IConversation } from "../models/Conversation.js";
 import { Message } from "../models/Message.js";
-import { PageInfo } from "../models/PageInfo.js";
+import { PageInfo } from "../../models/PageInfo.js";
 import Staff from "../../models/Staff.js";
 import { fetchFacebookProfile } from "../services/facebookServices.js";
 import { emitMessageToStaff, emitConversationToStaff } from "../../workers/socketWorker.js";
@@ -245,7 +245,7 @@ router.post("/", async (req, res) => {
         }).exec();
 
         // -- ISSUE - need to fix who will receive conversation. Now, I temporary add one staff for testing.
-        const staff = await Staff.findOne({ staffID: "phamtamlong-0978999225" }).exec();
+        const staff = await Staff.findOne({ staffID: "nguyendinhtien-0972123821" }).exec();
         if (!staff) {
           console.warn("⚠️ Default staff not found, cannot assign conversation");
           continue;
@@ -346,7 +346,7 @@ router.post("/", async (req, res) => {
         const getLocalMsgId = await TempoarayStoreLocalMsg.findOne({ facebookMsg_Id: ev.message.mid });
         const newMessageType = senderType === "shop" ? "shop-new-msg" : "customer-new-msg";
         emitMessageToStaff(
-          "nguyendinhtien-33355",
+          "nguyendinhtien-0972123821",
           {
             newMessageType: newMessageType,
             _id: storeMsgToDatabase._id,
